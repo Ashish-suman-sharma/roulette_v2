@@ -86,7 +86,7 @@
     </div>
   </div>
 
-    <script>
+        <script>
       const RED_NUMBERS = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
       const BLACK_NUMBERS = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
       const GREEN_NUMBERS = [0];
@@ -96,26 +96,26 @@
         20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
       ];
       let numbers = [];
-  
+    
       function isRed(num) {
         return RED_NUMBERS.includes(num);
       }
-  
+    
       function getDozen(num) {
         if (num >= 1 && num <= 12) return 1;
         if (num >= 13 && num <= 24) return 2;
         return 3;
       }
-  
+    
       function getRow(num) {
         if (num === 0) return 0;
         return ((num - 1) % 3) + 1;
       }
-  
+    
       function clearHighlights() {
         document.querySelectorAll('.highlight').forEach(el => el.classList.remove('highlight'));
       }
-  
+    
       function checkConsecutive(arr, count) {
         for (let i = 0; i <= arr.length - count; i++) {
           if (arr.slice(i, i + count).every((val, _, subArr) => val === subArr[0])) {
@@ -124,76 +124,90 @@
         }
         return false;
       }
-  
+    
       function checkPatterns(newNumbers) {
         clearHighlights();
         const lastFour = newNumbers.slice(0, 4);
         const lastSeven = newNumbers.slice(0, 7);
         const lastEight = newNumbers.slice(0, 8);
-  
+    
         const lastFourDozen = lastFour.map(getDozen);
         const lastFourRows = lastFour.map(getRow);
-  
+    
         // Highlight other dozens if four consecutive numbers are in the same dozen
         if (lastFour.length === 4 && lastFourDozen.every(d => d === lastFourDozen[0])) {
           const otherDozens = [1, 2, 3].filter(d => d !== lastFourDozen[0]);
           otherDozens.forEach(d => document.getElementById(`dozen-${d}`).classList.add('highlight'));
         }
-  
+    
         // Highlight other rows if four consecutive numbers are in the same row
         if (lastFour.length === 4 && lastFourRows.every(r => r === lastFourRows[0])) {
           const otherRows = [1, 2, 3].filter(r => r !== lastFourRows[0]);
           otherRows.forEach(r => document.getElementById(`row-${r}`).classList.add('highlight'));
         }
-  
+    
         // Highlight opposite for seven consecutive even or odd numbers
         if (lastSeven.length === 7 && lastSeven.every(n => n % 2 === 0)) document.getElementById('odd').classList.add('highlight');
         if (lastSeven.length === 7 && lastSeven.every(n => n % 2 !== 0)) document.getElementById('even').classList.add('highlight');
-  
+    
         // Highlight opposite for seven consecutive red or black numbers
         if (lastSeven.length === 7 && lastSeven.every(isRed)) document.getElementById('black').classList.add('highlight');
         if (lastSeven.length === 7 && lastSeven.every(n => !isRed(n) && n !== 0)) document.getElementById('red').classList.add('highlight');
-  
+    
         // Highlight opposite for seven consecutive 1-18 or 19-36
         if (lastSeven.length === 7 && lastSeven.every(n => n >= 1 && n <= 18)) document.getElementById('high').classList.add('highlight');
         if (lastSeven.length === 7 && lastSeven.every(n => n >= 19 && n <= 36)) document.getElementById('low').classList.add('highlight');
-  
+    
         // Check for alternating patterns in the last eight numbers
         if (lastEight.length === 8) {
           const pattern1 = [isRed(lastEight[0]), !isRed(lastEight[1]), isRed(lastEight[2]), !isRed(lastEight[3]), isRed(lastEight[4]), !isRed(lastEight[5]), isRed(lastEight[6]), !isRed(lastEight[7])];
           const pattern2 = [!isRed(lastEight[0]), isRed(lastEight[1]), !isRed(lastEight[2]), isRed(lastEight[3]), !isRed(lastEight[4]), isRed(lastEight[5]), !isRed(lastEight[6]), isRed(lastEight[7])];
-  
+    
           if (pattern1.every(Boolean)) {
             document.getElementById('red').classList.add('highlight');
           } else if (pattern2.every(Boolean)) {
             document.getElementById('black').classList.add('highlight');
           }
-  
+    
           const pattern3 = [lastEight[0] % 2 === 0, lastEight[1] % 2 !== 0, lastEight[2] % 2 === 0, lastEight[3] % 2 !== 0, lastEight[4] % 2 === 0, lastEight[5] % 2 !== 0, lastEight[6] % 2 === 0, lastEight[7] % 2 !== 0];
           const pattern4 = [lastEight[0] % 2 !== 0, lastEight[1] % 2 === 0, lastEight[2] % 2 !== 0, lastEight[3] % 2 === 0, lastEight[4] % 2 !== 0, lastEight[5] % 2 === 0, lastEight[6] % 2 !== 0, lastEight[7] % 2 === 0];
-  
+    
           if (pattern3.every(Boolean)) {
             document.getElementById('even').classList.add('highlight');
           } else if (pattern4.every(Boolean)) {
             document.getElementById('odd').classList.add('highlight');
           }
-  
+    
           const pattern5 = [lastEight[0] >= 1 && lastEight[0] <= 18, lastEight[1] >= 19 && lastEight[1] <= 36, lastEight[2] >= 1 && lastEight[2] <= 18, lastEight[3] >= 19 && lastEight[3] <= 36, lastEight[4] >= 1 && lastEight[4] <= 18, lastEight[5] >= 19 && lastEight[5] <= 36, lastEight[6] >= 1 && lastEight[6] <= 18, lastEight[7] >= 19 && lastEight[7] <= 36];
           const pattern6 = [lastEight[0] >= 19 && lastEight[0] <= 36, lastEight[1] >= 1 && lastEight[1] <= 18, lastEight[2] >= 19 && lastEight[2] <= 36, lastEight[3] >= 1 && lastEight[3] <= 18, lastEight[4] >= 19 && lastEight[4] <= 36, lastEight[5] >= 1 && lastEight[5] <= 18, lastEight[6] >= 19 && lastEight[6] <= 36, lastEight[7] >= 1 && lastEight[7] <= 18];
-  
+    
           if (pattern5.every(Boolean)) {
             document.getElementById('low').classList.add('highlight');
           } else if (pattern6.every(Boolean)) {
             document.getElementById('high').classList.add('highlight');
           }
+    
+          // Highlight third row if last 8 numbers fall in any 2 rows
+          const uniqueRows = [...new Set(lastEight.map(getRow))];
+          if (uniqueRows.length === 2) {
+            const thirdRow = [1, 2, 3].find(r => !uniqueRows.includes(r));
+            document.getElementById(`row-${thirdRow}`).classList.add('highlight');
+          }
+    
+          // Highlight third dozen if last 8 numbers fall in any 2 dozens
+          const uniqueDozens = [...new Set(lastEight.map(getDozen))];
+          if (uniqueDozens.length === 2) {
+            const thirdDozen = [1, 2, 3].find(d => !uniqueDozens.includes(d));
+            document.getElementById(`dozen-${thirdDozen}`).classList.add('highlight');
+          }
         }
       }
-  
+    
       function handleSubmit(event) {
         event.preventDefault();
         const input = document.getElementById('number-input');
         const num = parseInt(input.value);
-  
+    
         if (num >= 0 && num <= 36) {
           numbers.unshift(num); // Add new number to the beginning of the array
           numbers = numbers.slice(0, 10); // Keep only the last 10 numbers
@@ -202,9 +216,9 @@
           input.value = '';
         }
       }
-  
+    
       document.getElementById('number-form').addEventListener('submit', handleSubmit);
-  
+    
       function renderNumbers() {
         const container = document.getElementById('roulette-numbers');
         const positions = [
@@ -212,7 +226,7 @@
           [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
           [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
         ];
-  
+    
         positions.forEach(row => {
           row.forEach(num => {
             const button = document.createElement('button');
@@ -229,7 +243,7 @@
           });
         });
       }
-  
+    
       renderNumbers();
     </script>
   <script>
