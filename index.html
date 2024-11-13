@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roulette Predictor</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+    .red-number {
+      background-color: #e3342f;
+      color: white;
+    }
+  
+    .black-number {
+      background-color: black;
+      color: white;
+    }
+  
+    .green-number {
+      background-color: #38c172;
+      color: white;
+    }
+  
+    .highlight {
+      border: 2px solid #007bff; /* Changed to a bright blue color */
+      box-shadow: 0 0 10px #007bff; /* Added a blue glow to make it more visible */
+    }
+  
+    /* Highlight border for recommended sections */
+    .roulette-board {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1px;
+    }
+  
+    .roulette-board button {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.25rem;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="max-w-4xl mx-auto p-6 space-y-6">
+    <form id="number-form" class="space-y-4">
+      <input id="number-input" type="number" min="0" max="36" class="w-full p-4 text-2xl border rounded"
+        placeholder="Enter number (0-36)" />
+      <div id="last-numbers" class="text-lg">Last 10 numbers:</div>
+      <!-- <div id="recommendation" class="p-4 rounded bg-green-100 flex items-center">
+        <svg class="h-5 w-5 text-green-500" fill="currentColor">
+          <use xlink:href="#alert-circle" />
+        </svg>
+        <span class="ml-2">Enter numbers to see recommendations.</span>
+      </div> -->
+    </form>
+
+    <div class="border rounded p-4 bg-green-800">
+      <div class="flex gap-1">
+        <button class="w-12 h-36 border green-number font-bold hover:opacity-80">0</button>
+        <div class="grid grid-cols-12 gap-1" id="roulette-numbers">
+          <!-- Numbers 1 through 36 will be rendered here -->
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-1 mt-1">
+        <button id="dozen-1" class="p-4 bg-gray-700 text-white font-bold hover:opacity-80">1st 12</button>
+        <button id="dozen-2" class="p-4 bg-gray-700 text-white font-bold hover:opacity-80">2nd 12</button>
+        <button id="dozen-3" class="p-4 bg-gray-700 text-white font-bold hover:opacity-80">3rd 12</button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-1 mt-1">
+        <button id="red" class="p-3 red-number font-bold hover:opacity-80">RED</button>
+        <button id="black" class="p-3 black-number font-bold hover:opacity-80">BLACK</button>
+        <button id="row-1" class="p-3 bg-gray-700 text-white font-bold hover:opacity-80">ROW 1</button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-1 mt-1">
+        <button id="even" class="p-3 bg-gray-700 text-white font-bold hover:opacity-80">EVEN</button>
+        <button id="odd" class="p-3 bg-gray-700 text-white font-bold hover:opacity-80">ODD</button>
+        <button id="row-2" class="p-3 bg-gray-700 text-white font-bold hover:opacity-80">ROW 2</button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-1 mt-1">
+        <button id="low" class="p-3 bg-gray-700 text-white font-bold hover:opacity-80">1 to 18</button>
+        <button id="high" class="p-3 bg-gray-700 text-white font-bold hover:opacity-80">19 to 36</button>
+        <button id="row-3" class="p-3 bg-gray-700 text-white font-bold hover:opacity-80">ROW 3</button>
+      </div>
+    </div>
+  </div>
+
+   <script>
+    const RED_NUMBERS = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+    const BLACK_NUMBERS = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
+    const GREEN_NUMBERS = [0];
+    const ROULETTE_NUMBERS = [
+      0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27,
+      13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1,
+      20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
+    ];
+    let numbers = [];
+  
+    function isRed(num) {
+      return RED_NUMBERS.includes(num);
+    }
+  
+    function getDozen(num) {
+      if (num >= 1 && num <= 12) return 1;
+      if (num >= 13 && num <= 24) return 2;
+      return 3;
+    }
+  
+    function getRow(num) {
+      if (num === 0) return 0;
+      return ((num - 1) % 3) + 1;
+    }
+  
+    function clearHighlights() {
+      document.querySelectorAll('.highlight').forEach(el => el.classList.remove('highlight'));
+    }
+  
+    function checkConsecutive(arr, count) {
+      for (let i = 0; i <= arr.length - count; i++) {
+        if (arr.slice(i, i + count).every((val, _, subArr) => val === subArr[0])) {
+          return true;
+        }
+      }
+      return false;
+    }
+  
+    function checkPatterns(newNumbers) {
+      clearHighlights();
+      const lastThree = newNumbers.slice(0, 3);
+      const lastSix = newNumbers.slice(0, 6);
+  
+      const lastThreeDozen = lastThree.map(getDozen);
+      const lastThreeRows = lastThree.map(getRow);
+  
+      // Highlight other dozens if three consecutive numbers are in the same dozen
+      if (lastThree.length === 3 && lastThreeDozen.every(d => d === lastThreeDozen[0])) {
+        const otherDozens = [1, 2, 3].filter(d => d !== lastThreeDozen[0]);
+        otherDozens.forEach(d => document.getElementById(`dozen-${d}`).classList.add('highlight'));
+      }
+  
+      // Highlight other rows if three consecutive numbers are in the same row
+      if (lastThree.length === 3 && lastThreeRows.every(r => r === lastThreeRows[0])) {
+        const otherRows = [1, 2, 3].filter(r => r !== lastThreeRows[0]);
+        otherRows.forEach(r => document.getElementById(`row-${r}`).classList.add('highlight'));
+      }
+  
+      // Highlight opposite for six consecutive even or odd numbers
+      if (lastSix.length === 6 && lastSix.every(n => n % 2 === 0)) document.getElementById('odd').classList.add('highlight');
+      if (lastSix.length === 6 && lastSix.every(n => n % 2 !== 0)) document.getElementById('even').classList.add('highlight');
+  
+      // Highlight opposite for six consecutive red or black numbers
+      if (lastSix.length === 6 && lastSix.every(isRed)) document.getElementById('black').classList.add('highlight');
+      if (lastSix.length === 6 && lastSix.every(n => !isRed(n) && n !== 0)) document.getElementById('red').classList.add('highlight');
+  
+      // Highlight opposite for six consecutive 1-18 or 19-36
+      if (lastSix.length === 6 && lastSix.every(n => n >= 1 && n <= 18)) document.getElementById('high').classList.add('highlight');
+      if (lastSix.length === 6 && lastSix.every(n => n >= 19 && n <= 36)) document.getElementById('low').classList.add('highlight');
+    }
+  
+    function handleSubmit(event) {
+      event.preventDefault();
+      const input = document.getElementById('number-input');
+      const num = parseInt(input.value);
+  
+      if (num >= 0 && num <= 36) {
+        numbers.unshift(num); // Add new number to the beginning of the array
+        numbers = numbers.slice(0, 10); // Keep only the last 10 numbers
+        checkPatterns(numbers);
+        document.getElementById('last-numbers').textContent = 'Last 10 numbers: ' + numbers.join(', ');
+        input.value = '';
+      }
+    }
+  
+    document.getElementById('number-form').addEventListener('submit', handleSubmit);
+  
+    function renderNumbers() {
+      const container = document.getElementById('roulette-numbers');
+      const positions = [
+        [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
+        [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
+        [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
+      ];
+  
+      positions.forEach(row => {
+        row.forEach(num => {
+          const button = document.createElement('button');
+          button.textContent = num;
+          button.className = 'w-12 h-12 border font-bold hover:opacity-80';
+          if (GREEN_NUMBERS.includes(num)) {
+            button.classList.add('green-number');
+          } else if (isRed(num)) {
+            button.classList.add('red-number');
+          } else {
+            button.classList.add('black-number');
+          }
+          container.appendChild(button);
+        });
+      });
+    }
+  
+    renderNumbers();
+  </script>
+     <script>
+      document.addEventListener('keydown', function(e) {
+          if (e.key === "F12" || 
+              (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) || 
+              (e.ctrlKey && (e.key === "U" || e.key === "S" || e.key === "P"))) {
+              e.preventDefault();
+          }
+      });
+  
+      document.oncontextmenu = function (e) {
+          e.preventDefault();
+      };
+  
+      document.addEventListener('mousedown', function(e) {
+          if (e.button === 2) {
+              e.preventDefault();
+          }
+      });
+  
+      document.addEventListener('mouseup', function(e) {
+          if (e.button === 2) {
+              e.preventDefault();
+          }
+      });
+  </script>
+</body>
+
+</html>
