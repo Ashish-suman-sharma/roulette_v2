@@ -11,7 +11,31 @@
 </head>
 
 <body class="flex items-center justify-center min-h-screen">
+  <!-- D'Alembert Betting System Recommendation Board -->
+  <div class="recommendation-board">
+   
+    <div class="recommendation-content">
+      <div>
+        <div class="recommendation-label">RECOMMENDED BET</div>
+        <div id="recommended-bet" class="recommendation-amount">₹10</div>
+      </div>
+    </div>
+    
+  </div>
+    
   <div class="main-container max-w-5xl mx-auto p-8 space-y-6">    
+    <!-- Wallet Display -->
+    <div class="wallet-container flex justify-between items-center">
+      <div>
+        <span class="wallet-label">WALLET</span>
+        <span id="wallet-amount" class="wallet-amount">₹1000</span>
+      </div>
+      <div>
+        <span class="bet-label">CURRENT BET</span>
+        <span id="current-bet" class="bet-amount">₹0</span>
+      </div>
+    </div>
+    
     <form id="number-form" class="space-y-4">
       <input id="number-input" type="number" min="0" max="36" class="w-full p-4 text-2xl rounded-md"
         placeholder="Enter number (0-36)" />
@@ -42,7 +66,7 @@
       <div class="grid grid-cols-3 gap-1 mt-1">
         <button id="red" class="p-3 red-number font-bold hover:opacity-80 rounded-md"><i class="fas fa-circle mr-1"></i> RED</button>
         <button id="black" class="p-3 black-number font-bold hover:opacity-80 rounded-md"><i class="fas fa-circle mr-1"></i> BLACK</button>
-        <button id="row-1" class="p-3 bg-gray-800 bg-opacity-80 text-white font-bold hover:opacity-80 rounded-md border border-opacity-20 border-cyan-400"><i class="fas fa-grip-lines mr-1"></i> ROW 1</button>
+        <button id="row-3" class="p-3 bg-gray-800 bg-opacity-80 text-white font-bold hover:opacity-80 rounded-md border border-opacity-20 border-cyan-400"><i class="fas fa-grip-lines mr-1"></i> ROW 3</button>
       </div>
 
       <div class="grid grid-cols-3 gap-1 mt-1">
@@ -54,7 +78,7 @@
       <div class="grid grid-cols-3 gap-1 mt-1">
         <button id="low" class="p-3 bg-gray-800 bg-opacity-80 text-white font-bold hover:opacity-80 rounded-md border border-opacity-20 border-cyan-400"><i class="fas fa-arrow-down mr-1"></i> 1 to 18</button>
         <button id="high" class="p-3 bg-gray-800 bg-opacity-80 text-white font-bold hover:opacity-80 rounded-md border border-opacity-20 border-cyan-400"><i class="fas fa-arrow-up mr-1"></i> 19 to 36</button>
-        <button id="row-3" class="p-3 bg-gray-800 bg-opacity-80 text-white font-bold hover:opacity-80 rounded-md border border-opacity-20 border-cyan-400"><i class="fas fa-grip-lines mr-1"></i> ROW 3</button>
+        <button id="row-1" class="p-3 bg-gray-800 bg-opacity-80 text-white font-bold hover:opacity-80 rounded-md border border-opacity-20 border-cyan-400"><i class="fas fa-grip-lines mr-1"></i> ROW 1</button>
       </div>
     </div>
   </div>

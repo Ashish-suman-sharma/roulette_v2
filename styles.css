@@ -111,27 +111,42 @@ input:focus {
 }
 
 .highlight {
-  border: 2px solid var(--neon-cyan);
+  /* Use box-shadow instead of border to avoid size change */
+  border-color: var(--neon-cyan);
   box-shadow: 0 0 15px var(--neon-cyan), inset 0 0 8px rgba(0, 247, 255, 0.5);
   animation: pulse 2s infinite;
   position: relative;
   z-index: 1;
+  /* Enhanced highlight for advanced betting algorithm */
+  background-image: linear-gradient(rgba(0, 247, 255, 0.1), rgba(0, 0, 0, 0));
 }
 
 .highlight::after {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border-radius: 6px;
   background: transparent;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   border-image: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple)) 1;
-  opacity: 0.6;
-  z-index: -1;
-  animation: rotate 3s linear infinite;
+  opacity: 0.8;
+  z-index: 0;
+  animation: rotate 2s linear infinite;
+}
+
+.highlight::before {
+  content: '★';
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  font-size: 12px;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px var(--neon-cyan);
+  opacity: 0.9;
+  z-index: 1;
 }
 
 @keyframes rotate {
@@ -148,6 +163,21 @@ input:focus {
   }
   100% {
     box-shadow: 0 0 15px rgba(0, 247, 255, 0.7);
+  }
+}
+
+@keyframes intensePulse {
+  0% {
+    box-shadow: 0 0 15px rgba(0, 247, 255, 0.7), inset 0 0 12px rgba(0, 247, 255, 0.7);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 247, 255, 1), inset 0 0 18px rgba(0, 247, 255, 0.9);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 1);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(0, 247, 255, 0.7), inset 0 0 12px rgba(0, 247, 255, 0.7);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
   }
 }
 
@@ -296,4 +326,275 @@ button:hover:before {
 
 .delete-button:active {
   transform: scale(0.97);
+}
+
+/* Wallet Styles */
+.wallet-container {
+  background: rgba(10, 14, 23, 0.6);
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(0, 247, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.wallet-label, .bet-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  display: block;
+  color: var(--neon-cyan);
+  margin-bottom: 5px;
+  text-shadow: 0 0 5px rgba(0, 247, 255, 0.5);
+}
+
+.wallet-amount, .bet-amount {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  display: block;
+}
+
+/* D'Alembert Betting System Recommendation Board */
+.recommendation-board {
+  background: linear-gradient(145deg, rgba(110, 13, 208, 0.15), rgba(0, 247, 255, 0.15));
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(110, 13, 208, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  overflow: hidden;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  animation: float 4s ease-in-out infinite;
+}
+
+.recommendation-header {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-align: center;
+  color: var(--neon-purple);
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px rgba(110, 13, 208, 0.6);
+  text-transform: uppercase;
+}
+
+.recommendation-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: rgba(10, 14, 23, 0.6);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.recommendation-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px rgba(0, 247, 255, 0.5);
+}
+
+.recommendation-amount {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--neon-purple);
+  text-shadow: 0 0 10px rgba(110, 13, 208, 0.7);
+  animation: recommendPulse 2.5s infinite;
+  text-align: center;
+}
+
+.recommendation-type {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 247, 255, 0.7);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.recommendation-tip {
+  font-size: 0.75rem;
+  text-align: center;
+  opacity: 0.7;
+  padding-top: 5px;
+  line-height: 1.2;
+}
+
+@keyframes recommendPulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+.win-message, .lose-message, .refund-message, .dalembert-message {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  padding: 20px 30px;
+  text-align: center;
+  z-index: 100;
+  animation: popIn 0.5s forwards;
+  backdrop-filter: blur(5px);
+  min-width: 250px;
+}
+
+.win-message {
+  background: rgba(57, 255, 20, 0.2);
+  border: 2px solid var(--neon-green);
+  box-shadow: 0 0 30px rgba(57, 255, 20, 0.5);
+}
+
+.lose-message {
+  background: rgba(255, 53, 94, 0.2);
+  border: 2px solid var(--neon-red);
+  box-shadow: 0 0 30px rgba(255, 53, 94, 0.5);
+}
+
+.dalembert-message {
+  background: rgba(110, 13, 208, 0.2);
+  border: 2px solid var(--neon-purple);
+  box-shadow: 0 0 30px rgba(110, 13, 208, 0.5);
+}
+
+.refund-message {
+  background: rgba(0, 247, 255, 0.2);
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 0 0 30px rgba(0, 247, 255, 0.5);
+}
+
+.win-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--neon-green);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+  margin-bottom: 5px;
+}
+
+.lose-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--neon-red);
+  text-shadow: 0 0 10px rgba(255, 53, 94, 0.8);
+  margin-bottom: 5px;
+}
+
+.refund-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 247, 255, 0.8);
+  margin-bottom: 5px;
+}
+
+.dalembert-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--neon-purple);
+  text-shadow: 0 0 10px rgba(110, 13, 208, 0.8);
+  margin-bottom: 5px;
+}
+
+.win-details, .lose-details, .refund-details, .dalembert-details {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  color: white;
+}
+
+/* D'Alembert Bet Button - Hidden */
+#dalembert-bet-btn {
+  display: none; /* Hide the button completely */
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes popIn {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Clear Bets Button Styling */
+#clear-bets {
+  background: linear-gradient(145deg, #ff355e, #c02046);
+  color: white;
+  border: 1px solid rgba(255, 53, 94, 0.5);
+  box-shadow: 0 0 8px rgba(255, 53, 94, 0.3);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+#clear-bets:hover {
+  background: linear-gradient(145deg, #d82a4d, #a51c3b);
+  box-shadow: 0 0 12px rgba(255, 53, 94, 0.5);
+  transform: translateY(-2px);
+}
+
+#clear-bets:active {
+  transform: scale(0.97);
+}
+
+.active-bet {
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-cyan), inset 0 0 8px rgba(0, 247, 255, 0.5);
+}
+
+.winning-animation {
+  animation: winPulse 1.5s ease-in-out;
+}
+
+.lose-animation {
+  animation: losePulse 1.5s ease-in-out;
+}
+
+@keyframes winPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); color: var(--neon-green); text-shadow: 0 0 15px rgba(57, 255, 20, 0.8); }
+  100% { transform: scale(1); }
+}
+
+@keyframes losePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); color: var(--neon-red); text-shadow: 0 0 15px rgba(255, 53, 94, 0.8); }
+  100% { transform: scale(1); }
+}
+
+@keyframes float {
+  0% { transform: translateY(-50%); }
+  50% { transform: translateY(-52%); }
+  100% { transform: translateY(-50%); }
 }
