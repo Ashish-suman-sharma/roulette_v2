@@ -16,7 +16,7 @@ const DALEMBERT_STEP = 10; // Amount to increase/decrease after loss/win
 const MAIN_BET_TYPES = ['red', 'black', 'even', 'odd', 'high', 'low']; // Valid bet types for D'Alembert
 
 let numbers = [];
-let walletBalance = 1000; // Initial wallet balance
+let walletBalance = 2000; // Initial wallet balance
 let currentBets = {}; // Track active bets
 let dalembertAmount = BASE_DALEMBERT_AMOUNT; // Current D'Alembert recommendation amount
 let recommendedBetType = 'red'; // Default recommended bet type
